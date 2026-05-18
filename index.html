@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>Gabarito Max — SEFAZ CE 2026 Versão Teste</title>
+  <style>
+    :root {
+      --bg:#07111f;
+      --panel:#111827;
+      --panel2:#16243a;
+      --gold:#f5c542;
+      --text:#ffffff;
+      --muted:#b8c7dc;
+      --green:#00e676;
+      --red:#ff1744;
+      --overlay:rgba(0,0,0,.78);
+    }
+    * { box-sizing:border-box; margin:0; padding:0; font-family:"Segoe UI", Tahoma, Verdana, sans-serif; }
+    html, body { background:radial-gradient(circle at top,#17335c 0,#07111f 44%,#050912 100%); color:var(--text); min-height:100vh; width:100%; }
+    body { display:flex; justify-content:center; }
+    .app-container { width:100%; max-width:900px; display:flex; flex-direction:column; align-items:center; padding-bottom:24px; }
+    header { width:100%; text-align:center; padding:24px 14px 16px; border-bottom:4px solid var(--gold); background:linear-gradient(135deg,#081120,#14213d); box-shadow:0 4px 18px rgba(245,197,66,.18); position:sticky; top:0; z-index:20; }
+    .logo-text { font-size:2.05rem; font-weight:950; letter-spacing:1px; text-transform:uppercase; font-style:italic; }
+    .logo-text span { color:var(--gold); }
+    .sub-title { font-size:.92rem; color:var(--gold); text-transform:uppercase; font-weight:800; margin-top:6px; line-height:1.35; }
+    .badge-premium { margin-top:10px; display:inline-block; background:#07111f; border:1px solid rgba(245,197,66,.7); border-radius:999px; padding:7px 12px; color:#fff; font-size:.78rem; font-weight:800; text-transform:uppercase; }
+    .price-tag { color:var(--gold); font-size:1rem; }
+    .screen { display:none; width:100%; padding:18px 12px; flex-direction:column; align-items:center; }
+    .screen.active { display:flex; animation:fadeIn .32s ease; }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(8px)} to {opacity:1; transform:translateY(0)} }
+    .hero { width:100%; background:linear-gradient(135deg,rgba(245,197,66,.12),rgba(29,78,216,.12)); border:1px solid rgba(245,197,66,.26); border-radius:16px; padding:16px; margin-bottom:14px; box-shadow:0 8px 30px rgba(0,0,0,.18); }
+    .hero h2 { font-size:1.2rem; color:var(--gold); margin-bottom:8px; text-transform:uppercase; }
+    .hero p { color:#eaf1ff; line-height:1.45; font-size:.95rem; }
+    .menu-grid { display:grid; grid-template-columns:1fr; gap:10px; width:100%; }
+    .btn { width:100%; padding:14px 13px; border:2px solid #2d4265; background:var(--panel2); color:var(--text); border-radius:10px; font-size:.92rem; font-weight:800; cursor:pointer; transition:.22s; text-transform:uppercase; display:flex; justify-content:space-between; align-items:center; gap:10px; box-shadow:0 3px 8px rgba(0,0,0,.28); }
+    .btn:hover:not(:disabled) { border-color:var(--gold); color:var(--gold); background:#1c3354; }
+    .btn small { display:block; text-transform:none; color:var(--muted); font-size:.74rem; font-weight:600; margin-top:3px; text-align:left; }
+    .btn.locked { background:linear-gradient(135deg,#111827,#2b1d0a); border-color:rgba(245,197,66,.55); }
+    .btn.correct { background:var(--green)!important; color:#001b0b!important; border-color:var(--green)!important; }
+    .btn.wrong { background:var(--red)!important; color:#fff!important; border-color:var(--red)!important; }
+    .btn:disabled { opacity:.9; cursor:not-allowed; }
+    .option-btn { justify-content:flex-start; text-align:left; line-height:1.35; text-transform:none; font-weight:600; }
+    .status-bar { width:100%; display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:12px; color:var(--muted); font-weight:900; text-transform:uppercase; border-bottom:2px solid #2d4265; padding-bottom:8px; font-size:.85rem; }
+    #question-text { font-size:1.04rem; text-align:left; margin-bottom:14px; padding:15px; background:rgba(17,24,39,.96); border-radius:10px; width:100%; line-height:1.45; border-left:5px solid var(--gold); font-weight:750; }
+    #options-container { width:100%; display:flex; flex-direction:column; gap:9px; }
+    #comment-box { display:none; width:100%; padding:14px; margin-top:14px; background:#050912; border-left:5px solid var(--gold); border-radius:8px; text-align:left; }
+    #comment-box h4 { color:var(--gold); margin-bottom:7px; font-size:.88rem; text-transform:uppercase; }
+    #comment-box p { font-size:.9rem; color:#e6edf9; line-height:1.45; }
+    .action-row { width:100%; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+    .btn-acao { background:var(--gold); color:#000; border:none; padding:13px; border-radius:9px; font-weight:950; width:100%; cursor:pointer; text-transform:uppercase; display:none; font-size:.94rem; }
+    .btn-voltar { background:transparent; border:2px solid #7f93b5; color:#dce8ff; padding:12px; border-radius:9px; width:100%; cursor:pointer; text-transform:uppercase; font-weight:900; }
+    .btn-voltar:hover { background:#21395c; color:#fff; }
+    .result-card { width:100%; background:linear-gradient(180deg,#16243a,#0b1424); border:1px solid rgba(245,197,66,.32); border-radius:14px; padding:22px 16px; text-align:center; box-shadow:0 10px 28px rgba(0,0,0,.25); }
+    .result-card h2 { color:var(--gold); font-size:1.45rem; margin-bottom:10px; text-transform:uppercase; }
+    .result-score { font-size:4rem; font-weight:950; color:var(--gold); line-height:1; }
+    .result-desc { color:var(--muted); margin:10px 0 16px; text-transform:uppercase; font-weight:800; }
+    .upsell-box { width:100%; margin-top:16px; background:#050912; border:1px solid rgba(245,197,66,.42); border-left:5px solid var(--gold); border-radius:10px; padding:15px; text-align:left; }
+    .upsell-box h3 { color:var(--gold); font-size:1rem; margin-bottom:8px; text-transform:uppercase; }
+    .upsell-box p { color:#e9eef7; line-height:1.45; font-size:.94rem; margin-bottom:10px; }
+    .upsell-link { display:inline-block; text-decoration:none; background:var(--gold); color:#000; padding:12px 14px; border-radius:9px; font-weight:950; text-transform:uppercase; animation:pulseBtn 1.4s infinite; }
+    @keyframes pulseBtn { 0%{transform:scale(1);box-shadow:0 0 0 rgba(245,197,66,0)} 50%{transform:scale(1.025);box-shadow:0 0 18px rgba(245,197,66,.35)} 100%{transform:scale(1);box-shadow:0 0 0 rgba(245,197,66,0)} }
+    .modal-overlay { position:fixed; inset:0; background:var(--overlay); display:none; align-items:center; justify-content:center; padding:16px; z-index:9999; }
+    .modal-overlay.show { display:flex; animation:fadeIn .25s ease; }
+    .modal-box { width:100%; max-width:540px; background:linear-gradient(180deg,#16243a,#07111f); border:2px solid var(--gold); border-radius:16px; padding:24px 18px; text-align:center; box-shadow:0 14px 42px rgba(0,0,0,.5); }
+    .modal-box h2 { color:var(--gold); text-transform:uppercase; margin-bottom:10px; }
+    .modal-box p { color:#e9eef7; line-height:1.45; margin-bottom:10px; }
+    .modal-actions { display:flex; flex-direction:column; gap:10px; margin-top:12px; }
+    .btn-modal { display:block; width:100%; padding:13px; border-radius:9px; text-decoration:none; font-weight:950; text-transform:uppercase; border:2px solid transparent; }
+    .btn-modal.primary { background:var(--gold); color:#000; }
+    .btn-modal.secondary { background:transparent; color:#fff; border-color:#8da5c8; cursor:pointer; }
+    .promo-alert { color:#ffdc5e!important; font-weight:900; }
+    @media(max-width:620px) {
+      header { padding:15px 8px 10px; }
+      .logo-text { font-size:1.5rem; }
+      .sub-title { font-size:.75rem; }
+      .badge-premium { font-size:.68rem; padding:6px 9px; }
+      .screen { padding:10px; }
+      .hero { padding:13px; }
+      .btn { font-size:.78rem; padding:11px 9px; }
+      .btn small { font-size:.68rem; }
+      #question-text { font-size:.92rem; padding:12px; }
+      .option-btn { font-size:.82rem; }
+      .action-row { grid-template-columns:1fr; }
+      .result-score { font-size:3rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <div class="logo-text">GABARITO <span>MAX</span></div>
+    <p class="sub-title">SEFAZ CE 2026 — Auditor-Fiscal | Versão Teste</p>
+    <div class="badge-premium">2 módulos liberados • premium com 260 questões + discursiva • <span class="price-tag">R$ 39,90</span></div>
+  </header>
+
+  <section id="screen-start" class="screen active">
+    <div class="hero">
+      <h2>Teste grátis SEFAZ CE</h2>
+      <p>Experimente 20 questões comentadas no estilo FCC. A versão premium libera 13 módulos, 260 questões comentadas, Constituição do Ceará, Reforma Tributária e treino discursivo.</p>
+    </div>
+    <div id="menu-grid" class="menu-grid"></div>
+  </section>
+
+  <section id="screen-quiz" class="screen">
+    <div class="status-bar">
+      <span id="materia-titulo">Módulo</span>
+      <span id="contador-questao">1/10</span>
+    </div>
+    <div id="question-text">Carregando pergunta...</div>
+    <div id="options-container"></div>
+    <div id="comment-box">
+      <h4>Comentário do Professor</h4>
+      <p id="comment-text"></p>
+    </div>
+    <div class="action-row">
+      <button id="btn-next" class="btn-acao" onclick="proximaQuestao()">Próxima questão ➔</button>
+      <button class="btn-voltar" onclick="voltarInicio()">🔙 Voltar ao menu</button>
+    </div>
+  </section>
+
+  <section id="screen-result" class="screen">
+    <div class="result-card">
+      <h2>Módulo concluído</h2>
+      <div id="score-display" class="result-score">0/10</div>
+      <p class="result-desc">Desempenho na versão teste</p>
+      <div class="upsell-box">
+        <h3>Libere o Premium SEFAZ CE 2026</h3>
+        <p>O teste mostrou só uma parte. O premium tem 13 módulos, 260 questões comentadas, treino discursivo e foco nas específicas que mais pesam.</p>
+        <p class="promo-alert">Oferta de lançamento: R$ 39,90.</p>
+        <a class="upsell-link" href="https://pay.kiwify.com.br/AMEiNRc" target="_blank" rel="noopener noreferrer">Liberar Premium — R$ 39,90</a>
+      </div>
+      <button class="btn-voltar" onclick="voltarInicio()">🔙 Voltar ao menu</button>
+    </div>
+  </section>
+</div>
+
+<div id="premiumModal" class="modal-overlay">
+  <div class="modal-box">
+    <h2>Módulo Premium</h2>
+    <p id="premiumModalText">Este módulo faz parte da versão completa.</p>
+    <p>A versão premium libera:</p>
+    <p>✔ 13 módulos completos<br>✔ 260 questões comentadas<br>✔ Constituição do Estado do Ceará<br>✔ Reforma Tributária / IBS / CBS<br>✔ Treino discursivo SEFAZ CE</p>
+    <p class="promo-alert">Acesso de lançamento por R$ 39,90.</p>
+    <div class="modal-actions">
+      <a class="btn-modal primary" href="https://pay.kiwify.com.br/AMEiNRc" target="_blank" rel="noopener noreferrer">Desbloquear Premium</a>
+      <button class="btn-modal secondary" onclick="fecharPremium()">Continuar no teste</button>
+    </div>
+  </div>
+</div>
+
+<audio id="audio-bg" loop src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=tension-103701.mp3"></audio>
+<audio id="audio-correct" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=success-1-6297.mp3"></audio>
+<audio id="audio-wrong" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf3232f.mp3?filename=error-126627.mp3"></audio>
+
+<script>
+const PREMIUM_URL = "https://pay.kiwify.com.br/AMEiNRc";
+const bancoLocal = {
+  "Módulo 1: Língua Portuguesa FCC": [
+    {
+      "q": "Em provas da FCC, a interpretação textual exige atenção à ideia central. Assinale a alternativa que melhor expressa uma leitura adequada de um texto administrativo.",
+      "o": [
+        "A opinião do leitor sempre prevalece sobre as marcas linguísticas do texto.",
+        "A conclusão deve ser inferida a partir de elementos presentes no próprio texto.",
+        "Todo texto oficial deve ser interpretado apenas de forma literal.",
+        "A intenção do autor é irrelevante quando há conectivos no período.",
+        "A presença de linguagem formal elimina qualquer possibilidade de inferência."
+      ],
+      "c": 1,
+      "comentario": "A FCC costuma cobrar inferência controlada pelo texto. A resposta correta deve estar sustentada por marcas linguísticas, conectivos e relações de sentido."
+    },
+    {
+      "q": "Assinale a alternativa em que a pontuação está correta.",
+      "o": [
+        "O Auditor-Fiscal, analisou os documentos fiscais.",
+        "O Auditor-Fiscal analisou, os documentos fiscais.",
+        "O Auditor-Fiscal analisou os documentos fiscais.",
+        "O Auditor-Fiscal, analisou, os documentos fiscais.",
+        "O Auditor-Fiscal analisou os, documentos fiscais."
+      ],
+      "c": 2,
+      "comentario": "Não se separa sujeito do verbo nem verbo de complemento direto por vírgula."
+    },
+    {
+      "q": "Assinale a frase em que há emprego correto da crase.",
+      "o": [
+        "A fiscalização retornou a repartição.",
+        "O servidor compareceu à reunião técnica.",
+        "O relatório foi entregue a autoridade competente.",
+        "O contribuinte se dirigiu a sala de atendimento.",
+        "A equipe chegou a capital pela manhã."
+      ],
+      "c": 1,
+      "comentario": "Há crase em 'à reunião' porque ocorre preposição 'a' exigida pelo verbo e artigo feminino 'a' antes de 'reunião'."
+    },
+    {
+      "q": "Em 'A fiscalização foi rigorosa, portanto o auto de infração foi lavrado', o conectivo 'portanto' indica ideia de:",
+      "o": [
+        "oposição",
+        "causa",
+        "conclusão",
+        "condição",
+        "concessão"
+      ],
+      "c": 2,
+      "comentario": "'Portanto' introduz conclusão em relação ao fato anterior."
+    },
+    {
+      "q": "Assinale a alternativa com concordância verbal correta.",
+      "o": [
+        "Houveram várias inconsistências fiscais.",
+        "Existia documentos pendentes.",
+        "Fazem dois anos que o processo tramita.",
+        "Foram identificadas divergências na escrituração.",
+        "Deve existirem provas nos autos."
+      ],
+      "c": 3,
+      "comentario": "O sujeito é 'divergências', por isso o verbo deve ir ao plural: 'foram identificadas'."
+    },
+    {
+      "q": "Assinale a alternativa em que a regência está correta.",
+      "o": [
+        "O servidor assistiu o treinamento.",
+        "O contribuinte obedeceu o prazo legal.",
+        "A autoridade visou ao cumprimento da lei.",
+        "O fiscal respondeu o ofício imediatamente.",
+        "O gestor preferiu mais o controle interno do que o externo."
+      ],
+      "c": 2,
+      "comentario": "No sentido de 'ter por objetivo', o verbo visar exige preposição 'a': 'visou ao cumprimento'."
+    },
+    {
+      "q": "A palavra 'público' recebe acento gráfico porque é:",
+      "o": [
+        "oxítona terminada em o",
+        "paroxítona terminada em ditongo",
+        "proparoxítona",
+        "monossílabo tônico",
+        "paroxítona terminada em l"
+      ],
+      "c": 2,
+      "comentario": "Toda proparoxítona é acentuada."
+    },
+    {
+      "q": "Assinale a alternativa em que o pronome foi empregado de acordo com a norma-padrão.",
+      "o": [
+        "Me informaram sobre a decisão.",
+        "Informaram-me sobre a decisão.",
+        "Informaram eu sobre a decisão.",
+        "Informaram para mim analisar.",
+        "Lhe vi no setor de protocolo."
+      ],
+      "c": 1,
+      "comentario": "Em início de oração, a norma-padrão favorece a ênclise: 'Informaram-me'."
+    },
+    {
+      "q": "Em redação oficial, deve-se priorizar:",
+      "o": [
+        "linguagem rebuscada e subjetiva",
+        "clareza, concisão, impessoalidade e formalidade",
+        "expressões emocionais para convencer o leitor",
+        "opiniões pessoais do agente público",
+        "frases longas para demonstrar técnica"
+      ],
+      "c": 1,
+      "comentario": "A redação oficial busca clareza, concisão, impessoalidade, formalidade e padronização."
+    },
+    {
+      "q": "Assinale a alternativa em que não há erro ortográfico.",
+      "o": [
+        "excessão",
+        "pretenção",
+        "análise",
+        "paralização",
+        "beneficiente"
+      ],
+      "c": 2,
+      "comentario": "A forma correta é 'análise'. As demais apresentam grafia incorreta."
+    }
+  ],
+  "Módulo 9: Direito Tributário Nacional": [
+    {
+      "q": "Tributo, segundo o CTN, é prestação:",
+      "o": [
+        "pecuniária compulsória, em moeda ou cujo valor nela se possa exprimir, que não constitua sanção de ato ilícito",
+        "facultativa e contratual",
+        "sempre penal",
+        "voluntária e sem lei",
+        "exclusivamente municipal"
+      ],
+      "c": 0,
+      "comentario": "Tributo é compulsório, instituído em lei, cobrado mediante atividade administrativa vinculada e não é sanção por ato ilícito."
+    },
+    {
+      "q": "São espécies tributárias clássicas:",
+      "o": [
+        "impostos, taxas e contribuições de melhoria",
+        "multas, juros e correção",
+        "preços públicos, tarifas e doações",
+        "contratos, convênios e acordos",
+        "penas, custas privadas e emolumentos sem lei"
+      ],
+      "c": 0,
+      "comentario": "A classificação tripartite do CTN inclui impostos, taxas e contribuições de melhoria."
+    },
+    {
+      "q": "Imposto é tributo cuja obrigação tem por fato gerador:",
+      "o": [
+        "situação independente de atividade estatal específica relativa ao contribuinte",
+        "serviço público específico e divisível",
+        "obra pública que valoriza imóvel",
+        "multa por infração",
+        "contrato administrativo"
+      ],
+      "c": 0,
+      "comentario": "Imposto não é vinculado a atuação estatal específica em favor do contribuinte."
+    },
+    {
+      "q": "Taxa pode ser cobrada em razão:",
+      "o": [
+        "do exercício do poder de polícia ou utilização de serviço público específico e divisível",
+        "de valorização imobiliária por obra pública apenas",
+        "de renda auferida",
+        "de transmissão causa mortis apenas",
+        "de qualquer atividade privada"
+      ],
+      "c": 0,
+      "comentario": "Taxas decorrem de poder de polícia ou serviço público específico e divisível."
+    },
+    {
+      "q": "Contribuição de melhoria decorre de:",
+      "o": [
+        "valorização imobiliária causada por obra pública",
+        "exercício do poder de polícia",
+        "circulação de mercadoria",
+        "renda anual",
+        "propriedade de veículo"
+      ],
+      "c": 0,
+      "comentario": "Contribuição de melhoria é vinculada à valorização do imóvel por obra pública."
+    },
+    {
+      "q": "Competência tributária é:",
+      "o": [
+        "poder constitucional de instituir tributos",
+        "capacidade de arrecadar por contrato privado",
+        "faculdade de pagar tributo",
+        "perdão automático de dívida",
+        "atividade contábil"
+      ],
+      "c": 0,
+      "comentario": "Competência tributária é atribuída pela Constituição aos entes federados."
+    },
+    {
+      "q": "Capacidade tributária ativa é:",
+      "o": [
+        "aptidão para arrecadar e fiscalizar tributo, podendo ser delegada",
+        "poder de criar tributo por decreto",
+        "direito do contribuinte de pagar menos",
+        "competência legislativa exclusiva",
+        "imunidade tributária"
+      ],
+      "c": 0,
+      "comentario": "A capacidade ativa é administrativa e pode ser delegada; competência tributária não."
+    },
+    {
+      "q": "Obrigação tributária principal surge com:",
+      "o": [
+        "ocorrência do fato gerador",
+        "inscrição em dívida ativa apenas",
+        "notificação judicial sempre",
+        "recurso administrativo",
+        "pagamento antecipado"
+      ],
+      "c": 0,
+      "comentario": "A obrigação principal nasce com o fato gerador e tem por objeto pagamento de tributo ou penalidade pecuniária."
+    },
+    {
+      "q": "Obrigação acessória tem por objeto:",
+      "o": [
+        "prestações positivas ou negativas no interesse da arrecadação ou fiscalização",
+        "sempre pagamento de imposto",
+        "somente multa penal",
+        "criação de tributo",
+        "isenção"
+      ],
+      "c": 0,
+      "comentario": "Obrigações acessórias envolvem deveres instrumentais, como declarar e escriturar."
+    },
+    {
+      "q": "Lançamento tributário é procedimento administrativo que:",
+      "o": [
+        "verifica fato gerador, calcula montante, identifica sujeito passivo e propõe penalidade se cabível",
+        "cria competência tributária",
+        "extingue tributo automaticamente",
+        "substitui lei complementar",
+        "é sempre judicial"
+      ],
+      "c": 0,
+      "comentario": "O lançamento constitui o crédito tributário."
+    }
+  ]
+};
+const modulosBloqueados = [
+  "Matemática Financeira, Estatística e Raciocínio Lógico",
+  "Administração Pública, Governança e Ética",
+  "Economia e Economia da Tributação",
+  "Direito Constitucional, Administrativo, Civil e Penal",
+  "Direito Financeiro e Finanças Públicas",
+  "Contabilidade Geral e Pública",
+  "Auditoria",
+  "Legislação Tributária Estadual do Ceará",
+  "Reforma Tributária, IBS, CBS e LC 214/2025",
+  "Simulado Final FCC SEFAZ CE",
+  "Constituição do Estado do Ceará",
+  "Treino Discursivo SEFAZ CE"
+];
+
+let moduloAtual = "";
+let questoesAtual = [];
+let indiceQuestao = 0;
+let acertos = 0;
+
+const screenStart = document.getElementById("screen-start");
+const screenQuiz = document.getElementById("screen-quiz");
+const screenResult = document.getElementById("screen-result");
+const menuGrid = document.getElementById("menu-grid");
+const materiaTitulo = document.getElementById("materia-titulo");
+const contadorQuestao = document.getElementById("contador-questao");
+const questionText = document.getElementById("question-text");
+const optionsContainer = document.getElementById("options-container");
+const commentBox = document.getElementById("comment-box");
+const commentText = document.getElementById("comment-text");
+const btnNext = document.getElementById("btn-next");
+const scoreDisplay = document.getElementById("score-display");
+const premiumModal = document.getElementById("premiumModal");
+const premiumModalText = document.getElementById("premiumModalText");
+const audioBg = document.getElementById("audio-bg");
+const audioCorrect = document.getElementById("audio-correct");
+const audioWrong = document.getElementById("audio-wrong");
+
+function trocarTela(telaAtiva) {
+  [screenStart, screenQuiz, screenResult].forEach(t => t.classList.remove("active"));
+  telaAtiva.classList.add("active");
+}
+
+function montarMenu() {
+  menuGrid.innerHTML = "";
+  Object.keys(bancoLocal).forEach((nome, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "btn";
+    btn.onclick = () => iniciarQuiz(nome);
+    btn.innerHTML = `<span>${idx + 1}. ${nome.replace(/^Módulo \d+: /, "")}<small>10 questões liberadas na versão teste</small></span><span>▶</span>`;
+    menuGrid.appendChild(btn);
+  });
+
+  modulosBloqueados.forEach((nome, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "btn locked";
+    btn.onclick = () => abrirPremium(nome);
+    btn.innerHTML = `<span>${idx + 3}. ${nome}<small>Disponível na versão premium</small></span><span>🔒</span>`;
+    menuGrid.appendChild(btn);
+  });
+}
+
+function iniciarQuiz(modulo) {
+  moduloAtual = modulo;
+  questoesAtual = bancoLocal[modulo] || [];
+  indiceQuestao = 0;
+  acertos = 0;
+  materiaTitulo.textContent = moduloAtual;
+  trocarTela(screenQuiz);
+  mostrarQuestao();
+  if (audioBg) {
+    audioBg.volume = 0.12;
+    audioBg.play().catch(() => {});
+  }
+}
+
+function mostrarQuestao() {
+  const questao = questoesAtual[indiceQuestao];
+  contadorQuestao.textContent = `${indiceQuestao + 1}/${questoesAtual.length}`;
+  questionText.textContent = questao.q;
+  optionsContainer.innerHTML = "";
+  commentBox.style.display = "none";
+  btnNext.style.display = "none";
+
+  questao.o.forEach((opcao, index) => {
+    const botao = document.createElement("button");
+    botao.className = "btn option-btn";
+    botao.innerHTML = `<strong>${String.fromCharCode(65 + index)})</strong>&nbsp; ${opcao}`;
+    botao.onclick = () => responder(index);
+    optionsContainer.appendChild(botao);
+  });
+}
+
+function responder(indiceSelecionado) {
+  const questao = questoesAtual[indiceQuestao];
+  const botoes = optionsContainer.querySelectorAll("button");
+
+  botoes.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === questao.c) btn.classList.add("correct");
+    if (i === indiceSelecionado && i !== questao.c) btn.classList.add("wrong");
+  });
+
+  if (indiceSelecionado === questao.c) {
+    acertos++;
+    if (audioCorrect) {
+      audioCorrect.currentTime = 0;
+      audioCorrect.play().catch(() => {});
+    }
+  } else {
+    if (audioWrong) {
+      audioWrong.currentTime = 0;
+      audioWrong.play().catch(() => {});
+    }
+  }
+
+  commentText.textContent = questao.comentario;
+  commentBox.style.display = "block";
+  btnNext.style.display = "block";
+}
+
+function proximaQuestao() {
+  indiceQuestao++;
+  if (indiceQuestao < questoesAtual.length) {
+    mostrarQuestao();
+  } else {
+    finalizarModulo();
+  }
+}
+
+function finalizarModulo() {
+  scoreDisplay.textContent = `${acertos}/${questoesAtual.length}`;
+  trocarTela(screenResult);
+}
+
+function voltarInicio() {
+  if (audioBg) {
+    audioBg.pause();
+    audioBg.currentTime = 0;
+  }
+  moduloAtual = "";
+  questoesAtual = [];
+  indiceQuestao = 0;
+  acertos = 0;
+  trocarTela(screenStart);
+}
+
+function abrirPremium(nomeModulo) {
+  premiumModalText.textContent = `${nomeModulo} faz parte da versão premium do Simulado SEFAZ CE 2026.`;
+  premiumModal.classList.add("show");
+}
+
+function fecharPremium() {
+  premiumModal.classList.remove("show");
+}
+
+premiumModal.addEventListener("click", function(e) {
+  if (e.target === premiumModal) fecharPremium();
+});
+
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") fecharPremium();
+});
+
+montarMenu();
+</script>
+</body>
+</html>
